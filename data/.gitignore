@@ -1,0 +1,4 @@
+# Ignore raw heavy data/PDFs while keeping folder structure
+*
+!.gitignore
+!README.md
