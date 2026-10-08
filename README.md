@@ -18,6 +18,30 @@ cd frontend && npm install && npm run dev
 The UI ships with light/dark mode (toggle in the header; defaults to your system
 preference and is remembered). Force a theme with `?theme=light` or `?theme=dark`.
 
+## Deploy (Render)
+
+The repo is deploy-ready as a **single Docker web service**: the image builds the
+React frontend and FastAPI serves it at `/` on the same origin as the API
+(no CORS, no `VITE_API_BASE` needed).
+
+1. Push the repo to GitHub (done: `itsshakirahamed-debug/veritas-ai`).
+2. On [render.com](https://render.com) → **New → Blueprint** → pick the repo
+   (`render.yaml` defines the service) — or **New → Web Service** → repo →
+   **Docker** runtime.
+3. Optional env var `ANTHROPIC_API_KEY` enables live LLM review/draft; without
+   it the grounded engine is used (recommended for demos).
+4. Health check hits `/health`; first PDF upload downloads the embedding model
+   once per instance (~90 MB).
+
+Notes for the chosen **in-memory demo** configuration:
+
+- Uploaded documents reset when the service restarts/redeploys.
+- The free/starter instance sizes are RAM-tight for PyTorch; if the service gets
+  killed on startup, move to a larger plan. The app degrades gracefully to
+  hash-based embeddings if the model cannot load.
+- Local image test: `docker build -t veritas-ai . && docker run -p 8000:8000 veritas-ai`
+
+
 Optional: `docker compose up -d` for Qdrant, then set `QDRANT_IN_MEMORY=false` to persist the index.
 Copy `.env.example` to `.env` and set `ANTHROPIC_API_KEY` to enable live LLM review/draft
 (model configurable via `ANTHROPIC_MODEL`). Without a key, review/draft use a grounded

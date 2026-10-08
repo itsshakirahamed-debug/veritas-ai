@@ -1,0 +1,15 @@
+# Keep the build context tiny — this repo contains a 1GB+ venv
+.venv
+**/__pycache__
+**/*.pyc
+.pytest_cache
+.git
+frontend/node_modules
+frontend/dist
+data
+eval
+tests
+*.md
+app_original_parts.txt
+scratch_app_backup.md
+.env

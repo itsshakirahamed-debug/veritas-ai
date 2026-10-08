@@ -1,7 +1,11 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { Upload, Search, Trash2, ChevronDown, ChevronRight, Check, X, RefreshCw, Moon, Sun, Copy } from 'lucide-react';
+import { Upload, Search, Trash2, ChevronDown, ChevronRight, Check, X, RefreshCw, Moon, Sun, Copy, Scale } from 'lucide-react';
 
-const API = import.meta.env.VITE_API_BASE || 'http://localhost:8000';
+// API base: explicit VITE_API_BASE > dev localhost > same origin (production
+// builds are served by the FastAPI app itself, so origin == backend).
+const API =
+  import.meta.env.VITE_API_BASE ||
+  (import.meta.env.DEV ? 'http://localhost:8000' : window.location.origin);
 
 const TABS = ['Documents', 'Search', 'Review', 'Draft'];
 
@@ -317,10 +321,16 @@ export default function App() {
 
   return (
     <div className="app">
+      <div className="tricolor" aria-hidden="true" />
       <header className="app-header">
         <div className="brand">
-          VERITAS LEGAL
-          <small>Don&apos;t just cite. Prove.</small>
+          <span className="seal" aria-hidden="true">
+            <Scale size={22} />
+          </span>
+          <span>
+            <h1 className="brand-title">VERITAS LEGAL</h1>
+            <small>Legal Document Intelligence System &middot; Don&apos;t just cite. Prove.</small>
+          </span>
         </div>
         <div className="row">
           <div className="status">
@@ -623,7 +633,7 @@ export default function App() {
                     {section.claims.map((claim, j) => (
                       <div className="claim" key={j}>
                         {claim.status === 'verified'
-                          ? <Check size={15} style={{ color: 'var(--accent)', flexShrink: 0, marginTop: 3 }} />
+                          ? <Check size={15} style={{ color: 'var(--success)', flexShrink: 0, marginTop: 3 }} />
                           : <X size={15} style={{ color: 'var(--danger)', flexShrink: 0, marginTop: 3 }} />}
                         <div className="body">
                           <span className={claim.status === 'verified' ? '' : 'missing'}>
@@ -657,6 +667,14 @@ export default function App() {
           </>
         )}
       </main>
+
+      <footer className="site-footer">
+        <span className="footer-title">Veritas Legal &mdash; Agentic Legal Assistant</span>
+        <span>
+          For demonstration and research purposes only. Not affiliated with any government,
+          court, or judiciary.
+        </span>
+      </footer>
 
       {source && (
         <aside className="panel">

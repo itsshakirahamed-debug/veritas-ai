@@ -1,0 +1,18 @@
+# Render blueprint: single Docker web service (API + UI on one origin).
+# Connect this repo on render.com → New → Blueprint to use it.
+services:
+  - type: web
+    name: veritas-ai
+    runtime: docker
+    healthCheckPath: /health
+    envVars:
+      # Demo mode: uploads reset on restart (chosen configuration).
+      # Set to "false" and provide QDRANT_HOST/QDRANT_PORT to persist.
+      - key: QDRANT_IN_MEMORY
+        value: "true"
+      # Optional — leave unset for the grounded (no-LLM) demo engine.
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      # Optional — defaults to claude-haiku-4-5 when a key is present.
+      - key: ANTHROPIC_MODEL
+        sync: false

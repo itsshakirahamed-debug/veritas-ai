@@ -542,3 +542,17 @@ def draft_document(req: DraftRequest, use_mock: bool = Query(False)):
         return generate_draft(req.doc_type, required_fields, case_chunks)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"LLM Generation failed: {str(e)}")
+
+
+# ---------------------------------------------------------------------------
+# Static frontend (production single-service deploy: API + UI on one origin)
+# Registered last so every API route above takes precedence.
+# ---------------------------------------------------------------------------
+_FRONTEND_DIST = os.path.normpath(
+    os.path.join(os.path.dirname(__file__), "..", "..", "frontend", "dist")
+)
+
+if os.path.isdir(_FRONTEND_DIST):
+    from fastapi.staticfiles import StaticFiles
+
+    app.mount("/", StaticFiles(directory=_FRONTEND_DIST, html=True), name="frontend")

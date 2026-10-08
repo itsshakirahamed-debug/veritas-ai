@@ -1,3 +1,6 @@
+# CPU-only torch wheels (several GB smaller than the CUDA wheels on PyPI);
+# harmless no-op where the platform has no +cpu wheel — pip falls back to PyPI.
+--extra-index-url https://download.pytorch.org/whl/cpu
 fastapi>=0.110.0
 uvicorn>=0.28.0
 pydantic>=2.6.0
